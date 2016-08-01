@@ -1,5 +1,6 @@
 package controllers;
 
+import database.MainDbClass;
 import page.PageGenerator;
 
 import javax.servlet.ServletException;
@@ -44,7 +45,10 @@ public class MyFirstServlet  extends HttpServlet{
             response.setStatus(HttpServletResponse.SC_OK);
         }
      */
-        String answer = firstDrug + "-----" + secondDrug;
+
+        String answer = MainDbClass.selectByDrug(firstDrug) + MainDbClass.selectByDrug(secondDrug);
+
+
 
         pageVariables.put("theAnswer", answer);
 

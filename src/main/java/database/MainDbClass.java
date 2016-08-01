@@ -19,6 +19,11 @@ public class MainDbClass {
 
     public static void main(String[] args) {
 
+
+        queryIncert("analgin", "nobody uses it now");
+        queryIncert("dimedrol", "good old first generation");
+        queryIncert("baralgin", "the same old metamisol natrium");
+
         querySelectAll();
 
 
@@ -27,15 +32,11 @@ public class MainDbClass {
     public static void querySelectAll() {
 
 
-        String query = "SELECT * FROM table1";
+        String query = "SELECT * FROM drugs";
 
         try {
             conn = DriverManager.getConnection(url, user, password);
-
             preparedStatement = conn.prepareStatement(query);
-
-            //preparedStatement.setString(1, "hirurgiya");
-
             rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
@@ -69,11 +70,60 @@ public class MainDbClass {
 
     }
 
+    public static String selectByDrug(String drug) {
 
-    public static void queryIncert(String name, String dep) {
 
-        String query = "INSERT INTO mydb.table1 (table1colname, table1coldepartment) VALUES ('" +
-                name + "', '" + dep + "');";
+        String query = "SELECT * FROM drugs WHERE drug=?";
+        StringBuilder results = new StringBuilder(" ");
+
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+            preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, drug);
+            rs = preparedStatement.executeQuery();
+
+            while (rs.next()) {
+
+                results.append(rs.getString(2));
+                results.append("  ");
+                results.append(rs.getString(3));
+                results.append("\n");
+
+
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (Exception ex) {
+                System.out.println("cant close connection");
+            }
+            try {
+                preparedStatement.close();
+            } catch (Exception ex) {
+                System.out.println("cant close pre[ared statement");
+            }
+            try {
+                rs.close();
+            } catch (Exception ex) {
+                System.out.println("cant close result set");
+            }
+
+
+
+        }
+
+        return results.toString();
+
+    }
+
+
+
+    public static void queryIncert(String drugName, String drugDescription) {
+
+        String query = "INSERT INTO mydb.drugs (drug, description) VALUES ('" +
+                drugName + "', '" + drugDescription + "');";
 
         try {
 
@@ -104,20 +154,14 @@ public class MainDbClass {
     }
 
     public static void queryDelete(String name) {
-        String query = "DELETE FROM table1 WHERE table1colname=?";
+        String query = "DELETE FROM drugs WHERE drug=?";
 
         try {
 
             conn = DriverManager.getConnection(url, user, password);
-
             preparedStatement = conn.prepareStatement(query);
-
             preparedStatement.setString(1, name);
-
-            int count = preparedStatement.executeUpdate();
-
-            System.out.println(count + " units were deleted");
-
+            preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -138,9 +182,9 @@ public class MainDbClass {
         }
     }
 
-    public static void queryUpdate(int id) {
+    public static void queryUpdate(String oldDrugName, String newDrugName) {
 
-        String query = "UPDATE table1 SET table1coldepartment=? WHERE table1coldepartment=?";
+        String query = "UPDATE drugs SET drug=? WHERE drug=?";
 
         try {
 
@@ -149,8 +193,8 @@ public class MainDbClass {
             preparedStatement = conn.prepareStatement(query);
 
 
-            preparedStatement.setString(1, "endohirurgiya");
-            preparedStatement.setString(2, "hirurgiya");
+            preparedStatement.setString(1, newDrugName);
+            preparedStatement.setString(2, oldDrugName);
 
             int count = preparedStatement.executeUpdate();
 
