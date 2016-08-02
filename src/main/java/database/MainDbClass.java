@@ -17,12 +17,6 @@ public class MainDbClass {
     public static void main(String[] args) {
 
 
-
-        querySelectAll();
-        insertToCross(1, 3, "not comparable because they have the same active substance");
-        System.out.println(selectFromCross(1,3));
-
-
     }
 
     public static void querySelectAll() {
@@ -62,6 +56,7 @@ public class MainDbClass {
         String query = "SELECT * FROM drugs WHERE drug=?";
         StringBuilder results = new StringBuilder(" ");
 
+
         try (Connection connection = DriverManager.getConnection(url, user, password);
             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
@@ -93,7 +88,7 @@ public class MainDbClass {
 
 
 
-    public static void queryInsert(String drugName, String drugDescription) {
+    public static void insertIntoDrugs(String drugName, String drugDescription) {
 
         String query = "INSERT INTO mydb.drugs (drug, description) VALUES ('" +
                 drugName + "', '" + drugDescription + "');";
@@ -113,7 +108,7 @@ public class MainDbClass {
         }
     }
 
-    public static void queryDelete(String name) {
+    public static void deleteDrug(String name) {
         String query = "DELETE FROM drugs WHERE drug=?";
 
         try (Connection connection = DriverManager.getConnection(url, user, password);
@@ -129,7 +124,7 @@ public class MainDbClass {
         }
     }
 
-    public static void queryUpdate(String oldDrugName, String newDrugName) {
+    public static void updateDrugname(String oldDrugName, String newDrugName) {
 
         String query = "UPDATE drugs SET drug=? WHERE drug=?";
 
@@ -152,7 +147,7 @@ public class MainDbClass {
 
     }
 
-    public static void insertToCross(int idFirst, int idSecond, String compartability){
+    public static void insertIntoCross(int idFirst, int idSecond, String compartability){
 
         String query = "INSERT INTO mydb.cross (id_first_drug, id_second_drug, crosscol) VALUES (" +
                 idFirst + ", " + idSecond + ", '" + compartability + "');";
@@ -199,7 +194,7 @@ public class MainDbClass {
     }
     public static int getDrugId(String drug){
 
-        String selection = "SELECT iddrug FROM drugs WHERE drug=?";
+        String selection = "SELECT iddrugs FROM drugs WHERE drug=?";
         int drugId=0;
 
 
