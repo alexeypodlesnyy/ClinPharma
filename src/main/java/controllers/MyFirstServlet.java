@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 
+import static database.MainDbClass.getDrugId;
+
 /**
  * Created by araragi on 7/31/16.
  */
@@ -46,9 +48,9 @@ public class MyFirstServlet  extends HttpServlet{
         }
      */
 
-        String answer = MainDbClass.selectByDrug(firstDrug) + MainDbClass.selectByDrug(secondDrug);
 
 
+        String answer = MainDbClass.selectFromCross(MainDbClass.getDrugId(firstDrug), MainDbClass.getDrugId(secondDrug));
 
         pageVariables.put("theAnswer", answer);
 

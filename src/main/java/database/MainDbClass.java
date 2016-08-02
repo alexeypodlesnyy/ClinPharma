@@ -12,19 +12,15 @@ public class MainDbClass {
     private static final String user = "root";
     private static final String password = "21301510";
 
-    private static Connection conn;
-    private static ResultSet rs;
-    private static PreparedStatement preparedStatement;
 
 
     public static void main(String[] args) {
 
 
-        queryIncert("analgin", "nobody uses it now");
-        queryIncert("dimedrol", "good old first generation");
-        queryIncert("baralgin", "the same old metamisol natrium");
 
         querySelectAll();
+        insertToCross(1, 3, "not comparable because they have the same active substance");
+        System.out.println(selectFromCross(1,3));
 
 
     }
@@ -34,37 +30,28 @@ public class MainDbClass {
 
         String query = "SELECT * FROM drugs";
 
-        try {
-            conn = DriverManager.getConnection(url, user, password);
-            preparedStatement = conn.prepareStatement(query);
-            rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
+        try (Connection con = DriverManager.getConnection(url, user, password);
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+        ){
 
-                String name = rs.getString(2);
-                String dep = rs.getString(3);
+            while (resultSet.next()) {
 
-                System.out.println("-----" + name + "  " + dep + "-----");
+                int id = resultSet.getInt(1);
+                String name = resultSet.getString(2);
+                String dep = resultSet.getString(3);
+
+                System.out.println("-----" + id + "  " + name + "  " + dep + "-----");
             }
-        } catch (SQLException ex) {
+
+
+        }
+        catch (SQLException sqlEx){
+            sqlEx.printStackTrace();
+        }
+        catch (Exception ex) {
             ex.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("cant close connection");
-            }
-            try {
-                preparedStatement.close();
-            } catch (Exception ex) {
-                System.out.println("cant close pre[ared statement");
-            }
-            try {
-                rs.close();
-            } catch (Exception ex) {
-                System.out.println("cant close result set");
-            }
-
 
         }
 
@@ -72,47 +59,33 @@ public class MainDbClass {
 
     public static String selectByDrug(String drug) {
 
-
         String query = "SELECT * FROM drugs WHERE drug=?";
         StringBuilder results = new StringBuilder(" ");
 
-        try {
-            conn = DriverManager.getConnection(url, user, password);
-            preparedStatement = conn.prepareStatement(query);
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
             preparedStatement.setString(1, drug);
-            rs = preparedStatement.executeQuery();
 
-            while (rs.next()) {
-
-                results.append(rs.getString(2));
-                results.append("  ");
-                results.append(rs.getString(3));
-                results.append("\n");
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
 
 
+                while (resultSet.next()) {
+
+                    results.append(resultSet.getString(2));
+                    results.append("  ");
+                    results.append(resultSet.getString(3));
+                    results.append("\n");
+
+
+                }
             }
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("cant close connection");
-            }
-            try {
-                preparedStatement.close();
-            } catch (Exception ex) {
-                System.out.println("cant close pre[ared statement");
-            }
-            try {
-                rs.close();
-            } catch (Exception ex) {
-                System.out.println("cant close result set");
-            }
-
-
-
+        }catch (Exception ex){
+            ex.printStackTrace();
         }
+
 
         return results.toString();
 
@@ -120,65 +93,39 @@ public class MainDbClass {
 
 
 
-    public static void queryIncert(String drugName, String drugDescription) {
+    public static void queryInsert(String drugName, String drugDescription) {
 
         String query = "INSERT INTO mydb.drugs (drug, description) VALUES ('" +
                 drugName + "', '" + drugDescription + "');";
 
-        try {
+        try (Connection connection = DriverManager.getConnection(url,user, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
 
-            conn = DriverManager.getConnection(url, user, password);
-
-            preparedStatement = conn.prepareStatement(query);
+        ){
 
             preparedStatement.executeUpdate(query);
 
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-
-            try {
-                preparedStatement.close();
-            } catch (Exception ex) {
-                System.out.println("cant close prepared statement");
-            }
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("cant close connection");
-            }
-
-
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
     public static void queryDelete(String name) {
         String query = "DELETE FROM drugs WHERE drug=?";
 
-        try {
-
-            conn = DriverManager.getConnection(url, user, password);
-            preparedStatement = conn.prepareStatement(query);
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(query)
+        ){
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-
-            try {
-                preparedStatement.close();
-            } catch (Exception ex) {
-                System.out.println("cant close prepared statement");
-            }
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("cant close connection");
-            }
-
-
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
     }
 
@@ -186,12 +133,8 @@ public class MainDbClass {
 
         String query = "UPDATE drugs SET drug=? WHERE drug=?";
 
-        try {
-
-            conn = DriverManager.getConnection(url, user, password);
-
-            preparedStatement = conn.prepareStatement(query);
-
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)){
 
             preparedStatement.setString(1, newDrugName);
             preparedStatement.setString(2, oldDrugName);
@@ -203,22 +146,81 @@ public class MainDbClass {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
+        }  catch (Exception ex){
+            ex.printStackTrace();
+        }
 
-            try {
-                preparedStatement.close();
-            } catch (Exception ex) {
-                System.out.println("cant close prepared statement");
-            }
-            try {
-                conn.close();
-            } catch (Exception ex) {
-                System.out.println("cant close connection");
+    }
+
+    public static void insertToCross(int idFirst, int idSecond, String compartability){
+
+        String query = "INSERT INTO mydb.cross (id_first_drug, id_second_drug, crosscol) VALUES (" +
+                idFirst + ", " + idSecond + ", '" + compartability + "');";
+
+        try(Connection connection = DriverManager.getConnection(url,user, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+        ){
+            preparedStatement.executeUpdate(query);
+        }catch (SQLException sql){
+            sql.printStackTrace();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+    public static String selectFromCross(int idFirst, int idSecond){
+
+        String selection = "SELECT crosscol FROM mydb.cross WHERE id_first_drug=? AND id_second_drug=?";
+
+        String res = "nothing";
+
+        try(Connection connection = DriverManager.getConnection(url,user, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(selection);
+        ){
+
+            preparedStatement.setInt(1, idFirst);
+            preparedStatement.setInt(2, idSecond);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    res = resultSet.getString(1);
+                }
             }
 
+        }catch (SQLException sql){
+            sql.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
         }
 
 
+
+        return res;
+    }
+    public static int getDrugId(String drug){
+
+        String selection = "SELECT iddrug FROM drugs WHERE drug=?";
+        int drugId=0;
+
+
+        try(Connection connection = DriverManager.getConnection(url,user, password);
+            PreparedStatement preparedStatement = connection.prepareStatement(selection)){
+
+            preparedStatement.setString(1, drug);
+
+            try(ResultSet resultSet = preparedStatement.executeQuery()){
+                while (resultSet.next()){
+                    drugId = resultSet.getInt(1);
+                }
+
+            }
+        }catch (SQLException sql){
+            sql.printStackTrace();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return drugId;
     }
 
 }

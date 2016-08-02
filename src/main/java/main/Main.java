@@ -5,12 +5,17 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
+import java.sql.Connection;
+
 /**
  * Created by araragi on 7/31/16.
  */
 public class Main {
 
+
     public static void main(String[] args) throws Exception {
+
+
         MyFirstServlet myFirstServlet = new MyFirstServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
