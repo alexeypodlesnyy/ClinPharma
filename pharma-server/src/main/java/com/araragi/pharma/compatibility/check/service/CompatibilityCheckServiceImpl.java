@@ -6,6 +6,7 @@ import org.springframework.util.StringUtils;
 
 import com.araragi.pharma.compatibility.check.InternalExecutionException;
 import com.araragi.pharma.compatibility.check.dao.CompatibilityCheckDao;
+import com.araragi.pharma.compatibility.check.dao.ItemNotFoundException;
 
 /**
  */
@@ -20,7 +21,8 @@ public class CompatibilityCheckServiceImpl implements CompatibilityCheckService 
     }
 
     @Override
-    public CompatibilityResolution checkCompatibility(final String firstItem, final String secondItem) {
+    public CompatibilityResolution checkCompatibility(final String firstItem,
+            final String secondItem) throws ItemNotFoundException {
         if (StringUtils.isEmpty(firstItem) || StringUtils.isEmpty(secondItem)) {
             throw new InternalExecutionException("Unable to check compatibility. Both items should be set.");
         }

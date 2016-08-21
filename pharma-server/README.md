@@ -3,7 +3,7 @@
 ## Requirements
 - Java 8
 - Maven 3
-- MySQL
+- MySQL or Neo4J 4 (in-memory)
 
 ## Setup MySQL database
 - create new MySQL user
@@ -18,8 +18,13 @@ Go to the project directory and run maven command:
 
 ## Run application
 
-`java -jar ./target/pharma-server-1.0-SNAPSHOT.jar`
+### Using MySQL
 
+`java -Dspring.profiles.active=mysql -jar ./target/pharma-server-1.0-SNAPSHOT.jar`
+
+### Using Neo4J
+
+`java -Dspring.profiles.active=neo4j -jar ./target/pharma-server-1.0-SNAPSHOT.jar`
 
 ## Test application
 1. Request incompatible items:

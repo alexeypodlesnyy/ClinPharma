@@ -6,9 +6,13 @@
     <version>1.0-SNAPSHOT</version>
     <name>Pharma</name>
 
-    <properties>
-        <springboot.version>1.4.0.RELEASE</springboot.version>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.4.0.RELEASE</version>
+    </parent>
 
+    <properties>
         <!--General settings-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -25,14 +29,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
@@ -41,26 +37,17 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot</artifactId>
-            <version>${springboot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${springboot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
-            <version>${springboot.version}</version>
         </dependency>
 
         <!-- Rest interface -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>3.0.1</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
@@ -79,5 +66,20 @@
             <version>6.0.3</version>
         </dependency>
 
+        <!-- Neo4j -->
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-neo4j</artifactId>
+            <version>4.1.2.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.neo4j</groupId>
+            <artifactId>neo4j-ogm-embedded-driver</artifactId>
+            <version>2.0.4</version>
+        </dependency>
     </dependencies>
 </project>

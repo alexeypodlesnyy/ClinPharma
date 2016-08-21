@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.araragi.pharma.compatibility.check.InternalExecutionException;
+import com.araragi.pharma.compatibility.check.dao.ItemNotFoundException;
 import com.araragi.pharma.compatibility.check.service.CompatibilityCheckService;
 import com.araragi.pharma.compatibility.check.service.CompatibilityResolution;
 
@@ -45,6 +46,18 @@ public class CompatibilityCheckRestController implements CompatibilityCheckContr
     }
 
     /**
+     * Handles internal errors exceptions.
+     *
+     * @param e service exception
+     */
+    @Required
+    @ExceptionHandler(ItemNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public void handleServiceExceptions(final ItemNotFoundException e) {
+        LOG.error("Requested item doesn't exist.", e);
+    }
+
+    /**
      * /compatibility/check?firstItem=foo&secondItem=bar
      */
     @RequestMapping(
@@ -54,7 +67,7 @@ public class CompatibilityCheckRestController implements CompatibilityCheckContr
     public CompatibilityResolution handleCompatibilityCheck(
             final @RequestParam String firstItem,
             final @RequestParam String secondItem
-    ) {
+    ) throws ItemNotFoundException {
         return compatibilityCheckService.checkCompatibility(firstItem, secondItem);
     }
 }

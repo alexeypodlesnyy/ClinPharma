@@ -1,19 +1,23 @@
-package com.araragi.pharma.compatibility.check.dao;
+package com.araragi.pharma.compatibility.check.dao.mysql;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import com.araragi.pharma.compatibility.check.dao.CompatibilityCheckDao;
 
 /**
  *
  */
 @Component
-public class CompatibilityCheckJdbcDao implements CompatibilityCheckDao {
+@Profile("mysql")
+public class CompatibilityCheckMySqlDao implements CompatibilityCheckDao {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public CompatibilityCheckJdbcDao(final JdbcTemplate jdbcTemplate) {
+    public CompatibilityCheckMySqlDao(final JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 

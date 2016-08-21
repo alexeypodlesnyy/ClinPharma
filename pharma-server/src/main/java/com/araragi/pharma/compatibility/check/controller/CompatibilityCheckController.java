@@ -1,5 +1,6 @@
 package com.araragi.pharma.compatibility.check.controller;
 
+import com.araragi.pharma.compatibility.check.dao.ItemNotFoundException;
 import com.araragi.pharma.compatibility.check.service.CompatibilityResolution;
 
 /**
@@ -7,5 +8,5 @@ import com.araragi.pharma.compatibility.check.service.CompatibilityResolution;
  */
 public interface CompatibilityCheckController {
 
-    CompatibilityResolution handleCompatibilityCheck(String firstItem, String secondItem);
+    CompatibilityResolution handleCompatibilityCheck(String firstItem, String secondItem) throws ItemNotFoundException;
 }

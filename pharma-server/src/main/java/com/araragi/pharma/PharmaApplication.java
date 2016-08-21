@@ -19,12 +19,12 @@ import com.araragi.pharma.resetdb.DatabaseReset;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class ClinPharmaApplication {
+public class PharmaApplication {
 
     private final DatabaseReset databaseReset;
 
     @Autowired
-    public ClinPharmaApplication(final DatabaseReset databaseReset) {
+    public PharmaApplication(final DatabaseReset databaseReset) {
         this.databaseReset = databaseReset;
     }
 
@@ -34,7 +34,7 @@ public class ClinPharmaApplication {
     }
 
     public static void main(String[] args) {
-        final ApplicationContext applicationContext = SpringApplication.run(ClinPharmaApplication.class, args);
+        final ApplicationContext applicationContext = SpringApplication.run(PharmaApplication.class, args);
 
         logOutBeanNames(applicationContext.getBeanDefinitionNames());
     }
